@@ -4,7 +4,10 @@
     "autoload" : {
         "psr-4" : {
             "Fruty\\Environment\\" : "src/"
-        }
+        },
+        "files" : [
+            "helper.php"
+        ]
     },
     "suggest" : {
         "symfony/yaml"  : "To use YmlReader (for *.yml files) install symfony/yaml component"
@@ -16,6 +19,5 @@
             "email": "ed.fruty@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {}
+    "minimum-stability": "dev"
 }

@@ -4,22 +4,45 @@ namespace Fruty\Environment;
 use stdClass;
 use InvalidArgumentException;
 
-
+/**
+ * Class Env
+ * @package Fruty\Environment
+ */
 class Env 
 {
+    /**
+     * @var stdClass
+     */
     private $storage;
 
+    /**
+     * @var stdClass
+     */
     private $cache;
 
+    /**
+     * @var EnvReaderInterface
+     */
     private $reader;
 
+    /**
+     * @var string
+     */
     private $envFile;
 
-    private $share = true;
-
+    /**
+     * @var bool
+     */
     private $fileNotFoundException = false;
 
     /**
+     * @var array
+     */
+    private $required = [];
+
+    /**
+     * Get singleton instance of Env class
+     *
      * @return static
      */
     public static function instance()
@@ -31,6 +54,13 @@ class Env
         return $instance;
     }
 
+    /**
+     * Load environment variables
+     *
+     * @param string $path
+     * @param string $file
+     * @param string $reader
+     */
     public function load($path, $file = null, $reader = 'json')
     {
         $this->initialize();
@@ -40,32 +70,88 @@ class Env
         if (is_file($envFile)) {
             $this->envFile = $envFile;
             $this->loadData();
-            if ($this->share) {
-                $this->shareLoaded();
-            }
         } elseif ($this->fileNotFoundException) {
             throw new InvalidArgumentException("Environment file '{$file}' not found", 500);
         }
+        $this->merge();
+        $this->checkRequired();
     }
 
-    public function share($value)
+    /**
+     * Check required variables
+     *
+     * @throws \RuntimeException
+     */
+    private function checkRequired()
     {
-        $this->share = (bool) $value;
+        if ($this->required) {
+            foreach ($this->required as $el) {
+                if (! isset($this->storage->$el)) {
+                    throw new \RuntimeException("Environment variable '{$el}' must be defined", 500);
+                }
+            }
+        }
     }
 
+    /**
+     * Merge $_ENV with parsed values
+     */
+    private function merge()
+    {
+        $this->storage = (object) array_merge($_ENV, (array)$this->storage);
+        foreach ($this->storage as $k => $v) {
+            $_ENV[$k] = $v;
+        }
+    }
+
+    /**
+     * Throw Exception when env file is not found
+     *
+     * @param $value
+     */
     public function fileNotFoundException($value)
     {
         $this->fileNotFoundException = (bool) $value;
     }
 
-    public function get($key, $default = null)
+    /**
+     * Get env variable value
+     *
+     * @access public
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function get($key = null, $default = null)
     {
+        if ($key === null) {
+            return $this->storage;
+        }
         if (! isset($this->cache->$key)) {
             $this->cache->$key = $this->getFromStorage($this->storage, $key, $default);
         }
         return $this->cache->$key;
     }
 
+    /**
+     * Set required env variables
+     *
+     * @param array $required
+     */
+    public function required(array $required)
+    {
+        $this->required = $required;
+    }
+
+    /**
+     * Get value from storage
+     *
+     * @access private
+     * @param stdClass $storage
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
     private function getFromStorage(stdClass $storage, $key, $default = null)
     {
         if (is_null($key)) return $storage;
@@ -79,17 +165,33 @@ class Env
         return $storage;
     }
 
+    /**
+     * Initialize
+     */
     private function initialize()
     {
         $this->storage = new stdClass();
         $this->cache = new stdClass();
     }
 
+    /**
+     * Collect env file name from parts
+     * @param string $path
+     * @param string $file
+     * @param string $reader
+     * @return string
+     */
     private function combineEnvFileName($path, $file, $reader)
     {
         return rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file . "." . $reader;
     }
 
+    /**
+     * Set reader
+     *
+     * @param string $reader
+     * @return EnvReaderInterface
+     */
     private function setReader($reader)
     {
         switch ($reader) {
@@ -108,16 +210,11 @@ class Env
         }
     }
 
+    /**
+     * Load data by reader
+     */
     private function loadData()
     {
         $this->storage = $this->reader->run($this->envFile);
-    }
-
-    private function shareLoaded()
-    {
-        foreach ($this->storage as $k => $v) {
-            $_ENV[$k] = $v;
-            putenv("{$k}={$v}");
-        }
     }
 }
