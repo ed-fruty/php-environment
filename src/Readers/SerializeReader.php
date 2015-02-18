@@ -17,6 +17,6 @@ class SerializeReader implements EnvReaderInterface
      */
     public function run($file)
     {
-        return unserialize(file_get_contents($file));
+        return json_decode(json_encode(unserialize(file_get_contents($file))));
     }
 }

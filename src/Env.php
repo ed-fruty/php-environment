@@ -101,6 +101,7 @@ class Env
         $this->storage = (object) array_merge($_ENV, (array)$this->storage);
         foreach ($this->storage as $k => $v) {
             $_ENV[$k] = $v;
+            putenv("{$k}=" . json_encode($v));
         }
     }
 
