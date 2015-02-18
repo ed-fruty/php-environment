@@ -4,10 +4,10 @@ namespace Fruty\Environment\Readers;
 use Fruty\Environment\EnvReaderInterface;
 
 /**
- * Class PhpArrayReader
+ * Class SerializeReader
  * @package Fruty\Environment\Readers
  */
-class PhpArrayReader implements EnvReaderInterface
+class SerializeReader implements EnvReaderInterface
 {
 
     /**
@@ -17,6 +17,6 @@ class PhpArrayReader implements EnvReaderInterface
      */
     public function run($file)
     {
-        return json_decode(json_encode(require $file));
+        return unserialize(file_get_contents($file));
     }
 }

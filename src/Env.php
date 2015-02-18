@@ -144,6 +144,16 @@ class Env
     }
 
     /**
+     * Get env filename
+     *
+     * @return string
+     */
+    public function getEnvFile()
+    {
+        return $this->getEnvFile;
+    }
+
+    /**
      * Get value from storage
      *
      * @access private
@@ -157,7 +167,7 @@ class Env
         if (is_null($key)) return $storage;
         if (isset($storage->$key)) return $storage->$key;
         foreach (explode('.', $key) as $segment) {
-            if ( (! is_object($storage)) || ! isset($storage->$segment)) {
+            if ((! is_object($storage)) || ! isset($storage->$segment)) {
                 return $default;
             }
             $storage = $storage->$segment;
@@ -204,7 +214,10 @@ class Env
             case 'xml':
                 return $this->reader = new Readers\XmlReader();
             case 'yml':
+            case 'yaml':
                 return $this->reader = new Readers\YmlReader();
+            case 'serialize':
+                return $this->reader = new Readers\SerializeReader();
             default:
                 throw new InvalidArgumentException("Unknown reader {$reader}", 500);
         }

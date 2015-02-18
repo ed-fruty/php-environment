@@ -5,6 +5,10 @@ use Fruty\Environment\EnvReaderInterface;
 use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * Class YmlReader
+ * @package Fruty\Environment\Readers
+ */
 class YmlReader implements EnvReaderInterface
 {
 

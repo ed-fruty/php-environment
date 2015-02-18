@@ -4,6 +4,10 @@ namespace Fruty\Environment\Readers;
 use Fruty\Environment\EnvReaderInterface;
 use SimpleXMLElement;
 
+/**
+ * Class XmlReader
+ * @package Fruty\Environment\Readers
+ */
 class XmlReader implements EnvReaderInterface
 {
 
