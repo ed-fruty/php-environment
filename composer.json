@@ -1,6 +1,6 @@
 {
     "name": "ed-fruty/php-environment",
-    "description": "PHP Environment Wrapper [supported .json, .php, .ini, .xml, .yml environment configuration]",
+    "description": "PHP Environment Wrapper [supported json, php, ini, xml, yml, serialized data formats ]",
     "autoload" : {
         "psr-4" : {
             "Fruty\\Environment\\" : "src/"
@@ -10,7 +10,7 @@
         ]
     },
     "suggest" : {
-        "symfony/yaml"  : "To use YmlReader (for *.yml files) install symfony/yaml component"
+        "symfony/yaml"  : "To use YmlReader install symfony/yaml component"
     },
     "license": "MIT",
     "authors": [
