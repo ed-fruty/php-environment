@@ -1,6 +1,6 @@
 {
     "name": "ed-fruty/php-environment",
-    "description": "PHP Environment Wrapper [supported json, php, ini, xml, yml, serialized data formats ]",
+    "description": "PHP Environment Wrapper to load environment variables [supported json, php, ini, xml, yml and serialized data formats]",
     "autoload" : {
         "psr-4" : {
             "Fruty\\Environment\\" : "src/"
