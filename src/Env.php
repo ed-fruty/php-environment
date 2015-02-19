@@ -98,9 +98,10 @@ class Env
      */
     private function merge()
     {
-        $this->storage = (object) array_merge($_ENV, (array)$this->storage);
+        $this->storage = (object) array_merge($_ENV, $_SERVER, (array) $this->storage);
         foreach ($this->storage as $k => $v) {
             $_ENV[$k] = $v;
+            $_SERVER[$k] = $v;
             putenv("{$k}=" . json_encode($v));
         }
     }
@@ -151,7 +152,7 @@ class Env
      */
     public function getEnvFile()
     {
-        return $this->getEnvFile;
+        return $this->envFile;
     }
 
     /**
@@ -198,6 +199,40 @@ class Env
     }
 
     /**
+     * @param $type
+     * @return EnvReaderInterface
+     */
+    private function readerFactory($type)
+    {
+        $class = $this->getReaderClassName($type);
+        if (! class_exists($class)) {
+            throw new \InvalidArgumentException("Reader class {$class} not found", 500);
+        }
+        $reader = new $class;
+        if ($reader instanceof EnvReaderInterface === false) {
+            throw new \InvalidArgumentException("Reader class {$class} must implement EnvReaderInterface interface", 500);
+        }
+        return $reader;
+    }
+
+    /**
+     * @param $type
+     * @return string
+     */
+    private function getReaderClassName($type)
+    {
+        $name = ucfirst(strtolower($type));
+
+        switch ($name) {
+            case 'Yaml':
+                $name = 'Yml';
+                break;
+        }
+
+        return __NAMESPACE__ . "\\Readers\\{$name}Reader";
+    }
+
+    /**
      * Set reader
      *
      * @param string $reader
@@ -205,23 +240,7 @@ class Env
      */
     private function setReader($reader)
     {
-        switch ($reader) {
-            case 'json':
-                return $this->reader = new Readers\JsonReader();
-            case 'php':
-                return $this->reader = new Readers\PhpArrayReader();
-            case 'ini':
-                return $this->reader = new Readers\IniReader();
-            case 'xml':
-                return $this->reader = new Readers\XmlReader();
-            case 'yml':
-            case 'yaml':
-                return $this->reader = new Readers\YmlReader();
-            case 'serialize':
-                return $this->reader = new Readers\SerializeReader();
-            default:
-                throw new InvalidArgumentException("Unknown reader {$reader}", 500);
-        }
+        $this->reader = $this->readerFactory($reader);
     }
 
     /**
