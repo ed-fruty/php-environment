@@ -16,7 +16,7 @@ variables that your application needs without having to modify .htaccess
 files or Apache/nginx virtual hosts. This means you won't have to edit
 any files outside the project, and all the environment variables are
 always set no matter how you run your project - Apache, Nginx, CLI, and
-even PHP 5.4's built-in webserver. It's WAY easier than all the other
+even PHP 5.4's built-in webserver. This way is easier than all the other
 ways you know of to set environment variables, and you're going to love
 it.
 
@@ -29,8 +29,10 @@ it.
 Installation with Composer
 --------------------------
 
-```php
+```shell
+
 composer require ed-fruty/php-environment
+
 ```
 
 Usage
@@ -492,6 +494,6 @@ DB_USER=root
 
 And the data from `.env` file are parses by regular expressions.
 
-Maybe it would be nice to parse data by [parse_ini_file](http://php.net/manual/en/function.parse-ini-file.php) function, for example.
+Maybe it would be nice to parse data by [parse_ini_file](http://php.net/manual/en/function.parse-ini-file.php) function, for dotenv.
 
 Make a choice for yourself.
