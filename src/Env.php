@@ -41,6 +41,11 @@ class Env
     private $required = [];
 
     /**
+     * @var Runtime
+     */
+    private $runtime;
+
+    /**
      * Get singleton instance of Env class
      *
      * @return static
@@ -153,6 +158,17 @@ class Env
     public function getEnvFile()
     {
         return $this->envFile;
+    }
+
+    /**
+     * @return Runtime
+     */
+    public function runtime()
+    {
+        if (! $this->runtime) {
+            $this->runtime = new Runtime();
+        }
+        return $this->runtime;
     }
 
     /**
