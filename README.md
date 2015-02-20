@@ -479,21 +479,3 @@ var_dump(env_get('database'));
 
 echo env_get('database.host'); // will print 'localhost'
 ```
-
-Alternatives?
--------------
-
-Yea! It is very cool package for alternative usage is [vlucas/phpdotenv ](https://github.com/vlucas/phpdotenv)
-
-It is very simple, only one file `.env` you needs. But you need to assign your varialbes only in one format:
-
-```
-DB_HOST=localhost
-DB_USER=root
-```
-
-And the data from `.env` file are parses by regular expressions.
-
-Maybe it would be nice to parse data by [parse_ini_file](http://php.net/manual/en/function.parse-ini-file.php) function, for dotenv.
-
-Make a choice for yourself.
