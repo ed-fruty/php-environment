@@ -38,7 +38,7 @@ class Env
     /**
      * @var array
      */
-    private $required = [];
+    private $required;
 
     /**
      * @var Runtime

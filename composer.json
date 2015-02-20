@@ -9,6 +9,9 @@
             "helper.php"
         ]
     },
+    "require" : {
+        "php": ">=5.3.0"
+    },
     "suggest" : {
         "symfony/yaml"  : "To use YmlReader install symfony/yaml component"
     },
